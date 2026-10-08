@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+---
+
+<BaseLayout title="Página no encontrada">
+  <section class="section">
+    <div class="container message">
+      <p class="eyebrow">Error 404</p>
+      <h1>Esta página no existe.</h1>
+      <p class="lead">Puede que el enlace esté roto o que la página se haya movido.</p>
+      <Button href="/" arrow>Volver al inicio</Button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .message {
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+    min-height: 50vh;
+    align-content: center;
+  }
+
+  h1 {
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.05;
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type Variant = 'primary' | 'outline' | 'ghost' | 'light';
+type Size = 'sm' | 'md';
+
+interface Props extends HTMLAttributes<'a'> {
+  readonly href: string;
+  readonly variant?: Variant;
+  readonly size?: Size;
+  readonly arrow?: boolean;
+}
+
+const { href, variant = 'primary', size = 'md', arrow = false, class: className, ...rest } = Astro.props;
+---
+
+<a href={href} class:list={['btn', `btn-${variant}`, `btn-${size}`, className]} {...rest}>
+  <slot />
+  {arrow && <span aria-hidden="true" class="arrow">&rarr;</span>}
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-md { padding: 14px 24px; }
+  .btn-sm { padding: 10px 24px; }
+
+  .btn-primary { background: var(--color-blue); color: #fff; }
+  .btn-primary:hover { background: var(--color-blue-strong); }
+
+  .btn-outline { border-color: var(--color-blue); color: var(--color-blue); }
+  .btn-outline:hover { background: var(--color-blue); color: #fff; }
+
+  .btn-ghost { border-color: rgba(10, 10, 10, 0.2); color: var(--color-ink); }
+  .btn-ghost:hover { border-color: var(--color-ink); }
+
+  .btn-light { background: #fff; color: var(--color-ink); }
+  .btn-light:hover { background: var(--color-lavender-soft); }
+
+  .arrow { transition: transform 0.2s; }
+  .btn:hover .arrow { transform: translateX(3px); }
+</style>

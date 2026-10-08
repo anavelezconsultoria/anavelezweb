@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { projects } from '../data/projects';
+---
+
+<BaseLayout
+  title="Proyectos"
+  description="Proyectos de arquitectura y desarrollo de software: e-commerce, sistemas de gestión empresarial, infraestructura como código y arquitecturas basadas en eventos en AWS."
+>
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Portafolio" title="Proyectos destacados" as="h1" divider>
+        <p class="lead intro">
+          Cada proyecto empieza por entender el problema de negocio y termina en una arquitectura que el equipo puede
+          mantener y escalar. Estos diagramas muestran cómo están construidos.
+        </p>
+      </SectionHeading>
+      {projects.map((project, index) => <ProjectCard project={project} index={index} headingLevel="h2" />)}
+    </div>
+  </section>
+
+  <CtaBand
+    title="¿Tienes un proyecto en mente?"
+    text="Cuéntame tu idea y encontramos juntos la mejor solución tecnológica."
+    cta="Hablemos"
+  />
+</BaseLayout>
+
+<style>
+  .intro {
+    max-width: 720px;
+  }
+</style>

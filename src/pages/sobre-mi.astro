@@ -1,0 +1,306 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Button from '../components/Button.astro';
+import portrait from '../assets/retrato-ana.png';
+import { profile } from '../data/profile';
+import { highlights, principles, specialties } from '../data/services';
+---
+
+<BaseLayout
+  title="Sobre mí"
+  description="Ingeniera de Sistemas con Maestría y más de 15 años de experiencia en desarrollo de software, arquitectura cloud y consultoría tecnológica."
+>
+  <section class="section intro-section">
+    <div class="container intro">
+      <div class="intro-text">
+        <p class="eyebrow">Sobre mí</p>
+        <h1>{profile.fullName}</h1>
+        <p class="lead">
+          Ingeniera de Sistemas con Maestría y más de 15 años transformando ideas en soluciones tecnológicas para
+          empresas en Colombia y Latinoamérica.
+        </p>
+        <Button href={profile.portfolioPdf} variant="outline" download>Descargar portafolio</Button>
+      </div>
+      <Image class="portrait" src={portrait} alt={`Retrato de ${profile.fullName}`} widths={[320, 480, 640]} sizes="(max-width: 860px) 80vw, 380px" loading="eager" />
+    </div>
+  </section>
+
+  <section class="highlights-section">
+    <div class="container">
+      <ul class="highlights">
+        {highlights.map((h) => (
+          <li>
+            <p class="value">{h.value}</p>
+            <p class="label">{h.label}</p>
+            <p class="detail">{h.detail}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container story">
+      <SectionHeading eyebrow="Trayectoria" title="Tecnología al servicio de los resultados" />
+      <div class="prose">
+        <p>
+          Mi enfoque es ayudar a las empresas y a las personas a integrar la tecnología de manera estratégica,
+          optimizando su infraestructura y procesos para alcanzar un crecimiento y una competitividad sostenibles en
+          el mundo digital.
+        </p>
+        <p>
+          Mi trayectoria abarca desde el desarrollo de aplicaciones web y móviles hasta la implementación de
+          soluciones en la nube, pasando por la creación de APIs y la optimización de bases de datos. He trabajado con
+          JavaScript, PHP, Java, Node.js, HTML, CSS y Angular, y con herramientas como AWS, Azure, Terraform, MySQL y
+          PostgreSQL.
+        </p>
+        <p>
+          He liderado equipos con Scrum en proyectos de software de gran envergadura, gestionando de manera eficiente
+          los recursos y los plazos. Además de mi trabajo técnico, tengo experiencia en investigación en química
+          computacional y bioinformática, que me dio una base analítica sólida para resolver problemas complejos.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section principles-section">
+    <div class="container">
+      <SectionHeading eyebrow="Cómo trabajo" title="Criterios que guían cada decisión técnica" />
+      <ol class="principles">
+        {principles.map((p, index) => (
+          <li>
+            <span class="index">{String(index + 1).padStart(2, '0')}</span>
+            <h3>{p.title}</h3>
+            <p>{p.description}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeading eyebrow="Capacidades" title="Especialidades" />
+      <ul class="specialties">
+        {specialties.map((s) => (
+          <li>
+            <h3>{s.title}</h3>
+            <p>{s.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CtaBand
+    title="¿Trabajamos juntos?"
+    text="Si tienes un reto tecnológico o quieres llevar tu empresa al siguiente nivel, me encantaría escucharte."
+    cta="Escríbeme"
+  />
+</BaseLayout>
+
+<style>
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+  }
+
+  .intro-text {
+    display: grid;
+    gap: 24px;
+    justify-items: start;
+  }
+
+  h1 {
+    font-size: clamp(38px, 6.5vw, 76px);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+
+  .intro :global(.portrait) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border: 1px solid var(--color-lavender);
+  }
+
+  .highlights-section {
+    border-block: 1px solid var(--color-lavender);
+    background: var(--color-surface);
+  }
+
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .highlights li {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+    padding: 40px 28px;
+    border-right: 1px solid var(--color-lavender);
+  }
+
+  .highlights li:last-child {
+    border-right: 0;
+  }
+
+  .value {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.4vw, 40px);
+    color: var(--color-blue);
+  }
+
+  .label {
+    font-weight: 600;
+  }
+
+  .detail {
+    font-size: 14px;
+    color: var(--color-muted);
+  }
+
+  .story {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(32px, 6vw, 80px);
+  }
+
+  .prose {
+    display: grid;
+    gap: 20px;
+    color: var(--color-muted);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .principles-section {
+    background: var(--color-lavender-soft);
+  }
+
+  .principles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-navy);
+  }
+
+  .principles li {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: var(--space-5);
+    align-items: baseline;
+    padding-block: var(--space-6);
+    border-bottom: 1px solid rgba(0, 31, 128, 0.18);
+  }
+
+  .index {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    color: var(--color-blue);
+  }
+
+  .principles h3 {
+    font-size: var(--text-h3);
+    line-height: 1.35;
+  }
+
+  .principles p {
+    font-size: var(--text-md);
+    line-height: 1.65;
+    color: var(--color-muted);
+  }
+
+  .specialties h3 {
+    font-size: 17px;
+    line-height: 1.35;
+  }
+
+  .specialties p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+
+  .specialties {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .specialties li {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding: 32px;
+    border: 1px solid var(--color-lavender);
+  }
+
+  .specialties li::before {
+    content: '';
+    width: 40px;
+    height: 2px;
+    background: var(--color-blue);
+  }
+
+  @media (max-width: 960px) {
+    .highlights {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .highlights li:nth-child(2) {
+      border-right: 0;
+    }
+    .highlights li:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--color-lavender);
+    }
+    .specialties {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 860px) {
+    .intro,
+    .story {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .intro :global(.portrait) {
+      max-width: 360px;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .principles li {
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: var(--space-2) var(--space-4);
+    }
+    .principles p {
+      grid-column: 2;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .highlights {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .highlights li {
+      border-right: 0;
+      border-bottom: 1px solid var(--color-lavender);
+    }
+    .specialties {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

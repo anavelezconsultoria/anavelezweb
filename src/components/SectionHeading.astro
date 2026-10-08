@@ -1,0 +1,35 @@
+---
+interface Props {
+  readonly eyebrow: string;
+  readonly title: string;
+  readonly as?: 'h1' | 'h2';
+  readonly divider?: boolean;
+}
+
+const { eyebrow, title, as: Tag = 'h2', divider = false } = Astro.props;
+---
+
+<div class:list={['heading', { divider }]}>
+  <p class="eyebrow">{eyebrow}</p>
+  <Tag class="title">{title}</Tag>
+  <slot />
+</div>
+
+<style>
+  .heading {
+    display: grid;
+    align-content: start;
+    gap: var(--space-4);
+    margin-bottom: clamp(40px, 6vw, 64px);
+  }
+
+  .divider {
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--color-lavender);
+  }
+
+  .title {
+    font-size: clamp(30px, 4.6vw, 48px);
+    line-height: 1.1;
+  }
+</style>

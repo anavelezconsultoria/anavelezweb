@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+# material de referencia capturado de Airo (no se publica)
+referencia/
+.DS_Store
+Thumbs.db

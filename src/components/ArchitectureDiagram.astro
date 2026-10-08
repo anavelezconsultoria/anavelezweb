@@ -1,0 +1,93 @@
+---
+import type { ArchitectureDiagram, DiagramTone } from '../types/content';
+import { layoutDiagram } from '../lib/diagram-layout';
+import DiagramSvg from './DiagramSvg.astro';
+
+interface Props {
+  readonly diagram: ArchitectureDiagram;
+  readonly id: string;
+}
+
+const LEGEND: Record<DiagramTone, string> = {
+  service: 'Servicio',
+  data: 'Datos',
+  infra: 'Recurso cloud',
+  frontend: 'Interfaz',
+  actor: 'Actor / sistema',
+};
+
+const { diagram, id } = Astro.props;
+const wide = layoutDiagram(diagram, 'horizontal');
+const narrow = layoutDiagram(diagram, 'vertical');
+const presentTones = (Object.keys(LEGEND) as DiagramTone[]).filter((tone) =>
+  diagram.nodes.some((node) => node.tone === tone),
+);
+---
+
+<figure class="diagram">
+  <DiagramSvg class="wide" layout={wide} id={`${id}-h`} title={diagram.title} />
+  <DiagramSvg class="narrow" layout={narrow} id={`${id}-v`} title={diagram.title} />
+  <figcaption aria-label="Leyenda del diagrama">
+    {presentTones.map((tone) => <span class:list={['legend', `legend-${tone}`]}>{LEGEND[tone]}</span>)}
+  </figcaption>
+</figure>
+
+<style>
+  .diagram {
+    margin: 0;
+    display: grid;
+    gap: var(--space-4);
+    background:
+      radial-gradient(circle at 1px 1px, rgba(0, 31, 128, 0.1) 1px, transparent 0) 0 0 / 22px 22px,
+      var(--color-surface);
+    border: 1px solid var(--color-lavender);
+    padding: var(--space-6) var(--space-5) var(--space-4);
+  }
+
+  .diagram :global(.narrow) {
+    display: none;
+  }
+
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 20px;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-line);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+
+  .legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    border: 1px solid transparent;
+  }
+
+  .legend-service::before { background: var(--color-blue); }
+  .legend-data::before { background: var(--color-navy); }
+  .legend-infra::before { background: var(--color-cream); border-color: var(--color-navy); }
+  .legend-frontend::before { background: var(--color-lavender-soft); border-color: var(--color-lavender); }
+  .legend-actor::before { background: var(--color-surface); border-color: var(--color-ink); }
+
+  @media (max-width: 720px) {
+    .diagram {
+      padding: var(--space-5) var(--space-3) var(--space-4);
+    }
+    .diagram :global(.wide) {
+      display: none;
+    }
+    .diagram :global(.narrow) {
+      display: block;
+    }
+  }
+</style>

@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+import { navLinks, profile } from '../data/profile';
+
+const year = new Date().getFullYear();
+const linkedin = profile.contact.find((c) => c.kind === 'linkedin');
+---
+
+<footer class="footer">
+  <div class="container grid">
+    <div class="brand">
+      <Image src={logo} alt={profile.fullName} width={56} height={56} />
+      <p>{profile.tagline}<br />{profile.location}.</p>
+    </div>
+    <nav aria-label="Pie de página">
+      <ul>
+        {navLinks.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+        {linkedin && <li><a href={linkedin.href} rel="noopener" target="_blank">LinkedIn</a></li>}
+      </ul>
+    </nav>
+  </div>
+  <div class="container legal">
+    <p>&copy; {year} {profile.fullName}. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--color-lavender);
+    padding-top: 56px;
+    font-size: 13px;
+    color: var(--color-muted);
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+  }
+
+  .brand {
+    display: grid;
+    gap: 16px;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-blue);
+  }
+
+  .legal {
+    margin-top: var(--space-7);
+    font-size: var(--text-xs);
+  }
+
+  .legal p {
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-line);
+  }
+</style>

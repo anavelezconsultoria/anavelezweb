@@ -1,0 +1,203 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import ContactSection from '../components/home/ContactSection.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ServiceIcon from '../components/ServiceIcon.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import TagList from '../components/TagList.astro';
+import Button from '../components/Button.astro';
+import portrait from '../assets/retrato-ana.png';
+import { profile } from '../data/profile';
+import { services } from '../data/services';
+import { featuredProjects } from '../data/projects';
+
+const skillGroups = [
+  'JavaScript · Node.js · Angular',
+  'PHP · Java · Python',
+  'AWS · Azure · Terraform',
+  'MySQL · PostgreSQL · MongoDB',
+  'Scrum · Kanban · CI/CD',
+  'Arquitectura de microservicios',
+] as const;
+---
+
+<BaseLayout>
+  <Hero />
+
+  <section class="section" id="servicios">
+    <div class="container">
+      <SectionHeading eyebrow="Servicios" title="¿En qué te puedo ayudar?" />
+      <ul class="services">
+        {services.map((service) => (
+          <li class="service">
+            <ServiceIcon name={service.icon} />
+            <h3>{service.title}</h3>
+            <p>{service.summary}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section projects" id="proyectos">
+    <div class="container">
+      <SectionHeading eyebrow="Proyectos" title="Trabajo seleccionado" divider />
+      {featuredProjects.map((project, index) => <ProjectCard project={project} index={index} />)}
+      <div class="more">
+        <Button href="/proyectos" variant="outline" arrow>Ver todos los proyectos</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="sobre-mi">
+    <div class="container about">
+      <div class="portrait">
+        <Image src={portrait} alt={`Retrato de ${profile.fullName}`} widths={[360, 560, 720]} sizes="(max-width: 860px) 100vw, 45vw" />
+        <span class="accent-square" aria-hidden="true"></span>
+      </div>
+      <div class="about-body">
+        <p class="eyebrow">Sobre mí</p>
+        <h2>{profile.fullName}</h2>
+        <p class="credentials">{profile.credentials}</p>
+        <p>
+          Soy Ingeniera de Sistemas con Maestría en Ingeniería de Sistemas y más de 15 años de experiencia en la
+          creación de soluciones tecnológicas avanzadas. Mi trayectoria abarca desde el desarrollo de aplicaciones web
+          y móviles hasta la implementación de soluciones en la nube.
+        </p>
+        <p>
+          He trabajado con JavaScript, PHP, Java, Node.js, Angular, AWS, Azure y Terraform, brindando soluciones
+          integrales adaptadas a las necesidades de cada cliente. Además, cuento con experiencia en investigación en
+          química computacional y bioinformática.
+        </p>
+        <p class="eyebrow dark">Especialidades</p>
+        <TagList items={skillGroups} label="Especialidades" />
+        <div class="about-actions">
+          <Button href="/sobre-mi" arrow>Conoce mi trayectoria</Button>
+          <Button href={profile.portfolioPdf} variant="outline" download>Descargar portafolio</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ContactSection />
+</BaseLayout>
+
+<style>
+  .services {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-lavender);
+  }
+
+  .service {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+    padding: clamp(28px, 4vw, 48px);
+    border-bottom: 1px solid var(--color-lavender);
+  }
+
+  .service:nth-child(odd) {
+    border-right: 1px solid var(--color-lavender);
+  }
+
+  .service h3 {
+    font-size: 19px;
+    line-height: 1.4;
+  }
+
+  .service p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--color-muted);
+  }
+
+  .projects {
+    background: linear-gradient(var(--color-cream), #fff 40%, var(--color-cream));
+  }
+
+  .more {
+    margin-top: 48px;
+  }
+
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    gap: clamp(40px, 7vw, 96px);
+    align-items: center;
+  }
+
+  .portrait {
+    position: relative;
+  }
+
+  .portrait :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .accent-square {
+    position: absolute;
+    right: -16px;
+    bottom: -16px;
+    width: 96px;
+    height: 96px;
+    background: var(--color-lavender);
+    opacity: 0.55;
+    z-index: -1;
+  }
+
+  .about-body {
+    display: grid;
+    gap: 18px;
+  }
+
+  .about-body h2 {
+    font-size: clamp(30px, 4vw, 44px);
+    line-height: 1.1;
+  }
+
+  .about-body > p:not(.eyebrow):not(.credentials) {
+    color: var(--color-muted);
+  }
+
+  .credentials {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-blue);
+  }
+
+  .eyebrow.dark {
+    color: var(--color-ink);
+    margin-top: 8px;
+  }
+
+  .about-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 860px) {
+    .services {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .service:nth-child(odd) {
+      border-right: 0;
+    }
+    .about {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .portrait {
+      max-width: 420px;
+    }
+  }
+</style>

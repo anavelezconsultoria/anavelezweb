@@ -1,0 +1,83 @@
+---
+import type { Project } from '../types/content';
+import ArchitectureDiagram from './ArchitectureDiagram.astro';
+import TagList from './TagList.astro';
+
+interface Props {
+  readonly project: Project;
+  readonly index: number;
+  readonly headingLevel?: 'h2' | 'h3';
+}
+
+const { project, index, headingLevel: Heading = 'h3' } = Astro.props;
+const number = String(index + 1).padStart(2, '0');
+---
+
+<article class="project" id={project.slug}>
+  <header class="head">
+    <div class="meta">
+      <p class="eyebrow"><span class="number">{number}</span> {project.category}</p>
+      <Heading class="title">{project.title}</Heading>
+    </div>
+    <div class="desc">
+      <p>{project.summary}</p>
+      <TagList items={project.stack} label={`Tecnologías de ${project.title}`} />
+    </div>
+  </header>
+  <ArchitectureDiagram diagram={project.diagram} id={project.slug} />
+</article>
+
+<style>
+  .project {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-7);
+  }
+
+  .project:first-of-type {
+    padding-top: 0;
+  }
+
+  .project + :global(.project) {
+    border-top: 1px solid var(--color-lavender);
+  }
+
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: var(--space-5) var(--space-8);
+    align-items: start;
+  }
+
+  .meta {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .number {
+    color: var(--color-ink);
+    margin-right: var(--space-2);
+  }
+
+  .title {
+    font-size: var(--text-h3-lg);
+    line-height: 1.2;
+  }
+
+  .desc {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .desc p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-muted);
+  }
+
+  @media (max-width: 860px) {
+    .head {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

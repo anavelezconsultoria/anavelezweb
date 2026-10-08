@@ -1,0 +1,39 @@
+---
+import Button from './Button.astro';
+
+interface Props {
+  readonly title: string;
+  readonly text: string;
+  readonly cta: string;
+}
+
+const { title, text, cta } = Astro.props;
+---
+
+<section class="cta">
+  <div class="container inner">
+    <h2>{title}</h2>
+    <p class="lead">{text}</p>
+    <Button href="/#contacto" arrow>{cta}</Button>
+  </div>
+</section>
+
+<style>
+  .cta {
+    background: var(--color-lavender-soft);
+    padding-block: var(--space-section);
+    text-align: center;
+  }
+
+  .inner {
+    display: grid;
+    justify-items: center;
+    gap: 24px;
+    max-width: 760px;
+  }
+
+  h2 {
+    font-size: clamp(30px, 5vw, 56px);
+    line-height: 1.1;
+  }
+</style>

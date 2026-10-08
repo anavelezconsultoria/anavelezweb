@@ -1,0 +1,77 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { profile } from '../data/profile';
+
+interface Props {
+  readonly title?: string;
+  readonly description?: string;
+}
+
+const { title, description = profile.seoDescription } = Astro.props;
+const pageTitle = title
+  ? `${title} | ${profile.fullName}`
+  : `${profile.fullName} | Consultoría de Software y Tecnología`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? profile.siteUrl).href;
+const ogImage = new URL('/og-image.png', Astro.site ?? profile.siteUrl).href;
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.fullName,
+  jobTitle: 'Consultora de Software y Tecnología',
+  description: profile.seoDescription,
+  url: profile.siteUrl,
+  email: profile.contact.find((c) => c.kind === 'email')?.label,
+  address: { '@type': 'PostalAddress', addressCountry: 'CO' },
+  sameAs: profile.contact.filter((c) => c.kind === 'linkedin').map((c) => c.href),
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="theme-color" content="#fff6f1" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <SiteHeader />
+    <main id="contenido">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: 16px;
+    top: -48px;
+    z-index: 100;
+    padding: 8px 16px;
+    background: var(--color-blue);
+    color: #fff;
+    text-decoration: none;
+  }
+  .skip-link:focus {
+    top: 16px;
+  }
+</style>

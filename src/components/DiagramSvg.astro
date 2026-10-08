@@ -1,0 +1,132 @@
+---
+import type { DiagramTone } from '../types/content';
+import type { DiagramLayout } from '../lib/diagram-layout';
+
+interface Props {
+  readonly layout: DiagramLayout;
+  readonly id: string;
+  readonly title: string;
+  readonly class?: string;
+}
+
+const { layout, id, title, class: className } = Astro.props;
+const markerId = `${id}-arrow`;
+const titleId = `${id}-title`;
+
+const TONE_CLASS: Record<DiagramTone, string> = {
+  actor: 'tone-actor',
+  frontend: 'tone-frontend',
+  service: 'tone-service',
+  data: 'tone-data',
+  infra: 'tone-infra',
+};
+---
+
+<svg
+  class:list={['diagram-svg', className]}
+  viewBox={`0 0 ${layout.width} ${layout.height}`}
+  role="img"
+  aria-labelledby={titleId}
+  style={`max-width: ${layout.width * 1.25}px`}
+>
+  <title id={titleId}>{title}</title>
+  <defs>
+    <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" class="arrow-head"></path>
+    </marker>
+  </defs>
+
+  {layout.boundaries.map((b) => (
+    <g class="boundary">
+      <rect x={b.x} y={b.y} width={b.width} height={b.height} rx="6"></rect>
+      <text x={b.x + 10} y={b.y + 15}>{b.label}</text>
+    </g>
+  ))}
+
+  {layout.edges.map((e) => (
+    <g class="edge">
+      <path d={e.path} marker-end={`url(#${markerId})`}></path>
+      {e.label && <text x={e.labelX} y={e.labelY} text-anchor="middle">{e.label}</text>}
+    </g>
+  ))}
+
+  {layout.nodes.map((n) => (
+    <g class:list={['node', TONE_CLASS[n.tone]]}>
+      <rect x={n.x} y={n.y} width={n.width} height={n.height} rx="4"></rect>
+      <text class="node-label" x={n.x + n.width / 2} y={n.y + (n.caption ? 26 : 35)} text-anchor="middle">{n.label}</text>
+      {n.caption && (
+        <text class="node-caption" x={n.x + n.width / 2} y={n.y + 44} text-anchor="middle">{n.caption}</text>
+      )}
+    </g>
+  ))}
+</svg>
+
+<style>
+  .diagram-svg {
+    width: 100%;
+    height: auto;
+    margin-inline: auto;
+    font-family: var(--font-body);
+  }
+
+  .boundary rect {
+    fill: rgba(215, 186, 252, 0.16);
+    stroke: var(--color-lavender);
+    stroke-dasharray: 6 4;
+  }
+
+  .boundary text {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    fill: var(--color-navy);
+  }
+
+  .edge path {
+    fill: none;
+    stroke: var(--color-navy);
+    stroke-width: 1.4;
+  }
+
+  .edge text {
+    font-size: 10.5px;
+    fill: var(--color-muted);
+  }
+
+  .arrow-head {
+    fill: var(--color-navy);
+  }
+
+  .node rect {
+    stroke-width: 1.4;
+  }
+
+  .node-label {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .node-caption {
+    font-size: 11px;
+  }
+
+  .tone-actor rect { fill: var(--color-surface); stroke: var(--color-ink); }
+  .tone-actor .node-label { fill: var(--color-ink); }
+  .tone-actor .node-caption { fill: var(--color-muted); }
+
+  .tone-frontend rect { fill: var(--color-lavender-soft); stroke: var(--color-lavender); }
+  .tone-frontend .node-label { fill: var(--color-navy); }
+  .tone-frontend .node-caption { fill: var(--color-muted); }
+
+  .tone-service rect { fill: var(--color-blue); stroke: var(--color-blue); }
+  .tone-service .node-label { fill: #ffffff; }
+  .tone-service .node-caption { fill: #dbe3ff; }
+
+  .tone-data rect { fill: var(--color-navy); stroke: var(--color-navy); }
+  .tone-data .node-label { fill: #ffffff; }
+  .tone-data .node-caption { fill: #c9d2f5; }
+
+  .tone-infra rect { fill: var(--color-cream); stroke: var(--color-navy); }
+  .tone-infra .node-label { fill: var(--color-navy); }
+  .tone-infra .node-caption { fill: var(--color-muted); }
+</style>
