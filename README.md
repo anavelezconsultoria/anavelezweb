@@ -77,7 +77,7 @@ La llave es pública por diseño. La protección anti-spam está en el campo hon
 
 1. En el repo: Settings > Pages > Source: **GitHub Actions**.
 2. Hacer push a `main`. El workflow `.github/workflows/deploy.yml` compila y publica.
-3. Dominio: `public/CNAME` ya contiene `anavelezconsultora.com`. En GoDaddy > DNS:
+3. Dominio: con despliegue por Actions, GitHub ignora `public/CNAME`; el dominio se configura en Settings > Pages > Custom domain (`anavelezconsultora.com`). El archivo se conserva solo como referencia. En GoDaddy > DNS:
    - Registros `A` para `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
    - Registro `CNAME` para `www`: `anavelezconsultora.github.io`
 4. En Settings > Pages: confirmar el dominio y activar **Enforce HTTPS** cuando el certificado esté listo.
