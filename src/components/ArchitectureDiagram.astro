@@ -38,9 +38,11 @@ const presentTones = (Object.keys(LEGEND) as DiagramTone[]).filter((tone) =>
     display: grid;
     gap: var(--space-4);
     background:
-      radial-gradient(circle at 1px 1px, rgba(0, 31, 128, 0.1) 1px, transparent 0) 0 0 / 22px 22px,
+      radial-gradient(circle at 1px 1px, rgba(106, 79, 224, 0.1) 1px, transparent 0) 0 0 / 22px 22px,
       var(--color-surface);
-    border: 1px solid var(--color-lavender);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-sm);
     padding: var(--space-6) var(--space-5) var(--space-4);
   }
 

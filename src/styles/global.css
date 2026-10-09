@@ -3,23 +3,34 @@
 
 /*
  * Design system — Ana Velez
- * Tokens de marca tomados del logo. Los componentes solo consumen tokens;
- * ningun componente define colores, tamanos o espaciados propios.
+ * Misma familia visual que Sevilla Renace: blanco con un toque lavanda, azul
+ * luminoso de Ana, morado para lo secundario, lavanda en lineas y decoracion.
+ * Los componentes solo consumen tokens.
  */
 :root {
   /* Color: marca */
-  --color-blue: #003cff;
-  --color-blue-strong: #0030cc;
-  --color-navy: #001f80;
-  --color-lavender: #d7bafc;
-  --color-lavender-soft: #efe8ff;
+  --color-blue: #2b4cf2;
+  --color-blue-strong: #1d37cc;
+  --color-blue-soft: #eaefff;
+  --color-purple: #6a4fe0;
+  --color-purple-strong: #5136c7;
+  --color-navy: #3a2bb0;
+  --color-lavender: #e3dbfa;
+  --color-lavender-deco: #d7bafc;
+  --color-lavender-soft: #f1ecff;
 
   /* Color: neutros */
-  --color-ink: #0a0a0a;
-  --color-muted: #4a4a78;
-  --color-cream: #fff6f1;
+  --color-ink: #15132b;
+  --color-muted: #6b6889;
+  --color-cream: #fbfaff;
   --color-surface: #ffffff;
-  --color-line: rgba(10, 10, 10, 0.1);
+  --color-line: #ebe7f7;
+
+  /* Profundidad: sombras moradas suaves */
+  --shadow-sm: 0 1px 2px rgba(21, 19, 43, 0.04), 0 2px 12px rgba(106, 79, 224, 0.06);
+  --shadow-md: 0 10px 30px rgba(106, 79, 224, 0.12);
+  --radius-card: 16px;
+  --radius-pill: 999px;
 
   /* Color: superficies oscuras */
   --color-on-dark: #f5f3ff;
@@ -52,8 +63,8 @@
   /* Layout */
   --container: 1200px;
   --gutter: clamp(16px, 4vw, 40px);
-  --header-height: 72px;
-  --radius: 2px;
+  --header-height: 84px;
+  --radius: var(--radius-pill);
 
   color-scheme: light;
 }

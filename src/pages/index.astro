@@ -113,7 +113,7 @@ const skillGroups = [
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: radial-gradient(360px circle at var(--fx, 50%) var(--fy, 50%), rgba(0, 60, 255, 0.08), transparent 60%);
+    background: radial-gradient(360px circle at var(--fx, 50%) var(--fy, 50%), rgba(43, 76, 242, 0.08), transparent 60%);
     opacity: 0;
     transition: opacity 300ms;
   }
@@ -175,6 +175,7 @@ const skillGroups = [
   }
 
   .portrait :global(img) {
+    border-radius: var(--radius-card);
     width: 100%;
     height: auto;
     aspect-ratio: 4 / 5;
@@ -187,7 +188,7 @@ const skillGroups = [
     bottom: -16px;
     width: 96px;
     height: 96px;
-    background: var(--color-lavender);
+    background: var(--color-lavender-deco);
     opacity: 0.55;
     z-index: -1;
   }
