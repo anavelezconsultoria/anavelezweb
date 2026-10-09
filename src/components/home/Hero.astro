@@ -98,6 +98,8 @@ const retrasoApellidos = profile.firstNames.length * 32 + 120;
 
   /* Apellidos: una franja de luz barre el azul de la marca cada pocos segundos. */
   .accent {
+    /* Solo el ancho de la palabra: el destello no debe salirse sobre el fondo. */
+    display: inline-block;
     position: relative;
     color: var(--color-blue);
     overflow: hidden;

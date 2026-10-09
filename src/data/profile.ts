@@ -4,9 +4,9 @@ const EMAIL = 'ana.velez.consultora@gmail.com';
 const PHONE = '+57 315 530 5099';
 
 export const profile: Profile = {
-  firstNames: 'Ana Karina',
-  lastNames: 'Vélez Jurado',
-  fullName: 'Ana Karina Vélez Jurado',
+  firstNames: 'Ana',
+  lastNames: 'Vélez',
+  fullName: 'Ana Vélez',
   tagline: 'Consultoría · Software · Tecnología',
   credentials: 'Ingeniera de Sistemas · MSc. Ingeniería de Sistemas',
   intro:
