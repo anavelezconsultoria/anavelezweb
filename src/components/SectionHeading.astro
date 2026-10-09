@@ -1,4 +1,6 @@
 ---
+import TextoAnimado from './TextoAnimado.astro';
+
 interface Props {
   readonly eyebrow: string;
   readonly title: string;
@@ -9,9 +11,9 @@ interface Props {
 const { eyebrow, title, as: Tag = 'h2', divider = false } = Astro.props;
 ---
 
-<div class:list={['heading', { divider }]}>
-  <p class="eyebrow">{eyebrow}</p>
-  <Tag class="title">{title}</Tag>
+<div class:list={['heading', { divider }]} data-revelar="subir">
+  <p class="eyebrow"><span class="linea-eyebrow" aria-hidden="true"></span>{eyebrow}</p>
+  <Tag class="title"><TextoAnimado texto={title} modo="palabras" alVer /></Tag>
   <slot />
 </div>
 
@@ -26,6 +28,29 @@ const { eyebrow, title, as: Tag = 'h2', divider = false } = Astro.props;
   .divider {
     padding-bottom: 32px;
     border-bottom: 1px solid var(--color-lavender);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* La rayita del eyebrow crece cuando la seccion aparece. */
+  .linea-eyebrow {
+    width: 0;
+    height: 2px;
+    background: var(--color-blue);
+    transition: width 700ms var(--ease-salida) 200ms;
+  }
+
+  :global(.visible) > .eyebrow .linea-eyebrow,
+  .heading:global(.visible) .linea-eyebrow {
+    width: 28px;
+  }
+
+  :global(html:not(.js)) .linea-eyebrow {
+    width: 28px;
   }
 
   .title {

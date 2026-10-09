@@ -1,43 +1,75 @@
 ---
 import Button from '../Button.astro';
+import TextoAnimado from '../TextoAnimado.astro';
 import { profile } from '../../data/profile';
 import { highlights } from '../../data/services';
+
+/** Lo que hace Ana, tomado de su portafolio: rota bajo el nombre. */
+const QUEHACERES = [
+  'software a la medida',
+  'arquitectura en la nube',
+  'equipos ágiles',
+  'transformación digital',
+  'formación técnica',
+] as const;
+
+/** "15+" se anima contando; los demas valores son texto. */
+const numero = (valor: string): { contar: number; sufijo: string } | null => {
+  const m = /^(\d+)(\+?)$/.exec(valor);
+  return m ? { contar: Number(m[1]), sufijo: m[2] ?? '' } : null;
+};
+const retrasoApellidos = profile.firstNames.length * 32 + 120;
 ---
 
-<section class="hero">
+<section class="hero" data-parallax>
   <div class="orbits" aria-hidden="true">
-    <span class="ring ring-lg"></span>
-    <span class="ring ring-md"></span>
+    <span class="ring ring-lg"><span class="satelite"></span></span>
+    <span class="ring ring-md"><span class="satelite satelite-2"></span></span>
     <span class="dot"></span>
   </div>
 
   <div class="container content">
-    <p class="eyebrow">{profile.tagline}</p>
+    <p class="eyebrow aparece" style="--d: 0ms">{profile.tagline}</p>
     <h1>
-      <span>{profile.firstNames}</span>
-      <span class="accent">{profile.lastNames}</span>
+      <span class="linea"><TextoAnimado texto={profile.firstNames} retraso={100} /></span>
+      <span class="linea accent"><TextoAnimado texto={profile.lastNames} retraso={retrasoApellidos} /></span>
     </h1>
-    <p class="lead intro">{profile.intro}</p>
-    <div class="actions">
-      <Button href="/proyectos" arrow>Ver proyectos</Button>
+    <p class="rotador aparece" style="--d: 900ms" data-rotar>
+      <span>Diseño y construyo</span>
+      <span class="ventana">
+        {QUEHACERES.map((q, i) => <span class:list={['rotativa', { activa: i === 0 }]}>{q}</span>)}
+      </span>
+    </p>
+    <p class="lead intro aparece" style="--d: 1050ms">{profile.intro}</p>
+    <div class="actions aparece" style="--d: 1200ms">
+      <Button href="/proyectos" arrow class="brillo">Ver proyectos</Button>
       <Button href="#contacto" variant="ghost">Contáctame</Button>
     </div>
   </div>
 
   <div class="container">
-    <ul class="credentials" aria-label="Credenciales">
-      {highlights.map((h) => (
-        <li>
-          <span class="value">{h.value}</span>
-          <span class="label">{h.label}</span>
-        </li>
-      ))}
+    <ul class="credentials" aria-label="Credenciales" data-revelar="grupo">
+      {highlights.map((h, i) => {
+        const n = numero(h.value);
+        return (
+          <li style={`--i: ${i}`}>
+            {n ? (
+              <span class="value" data-contar={n.contar} data-sufijo={n.sufijo}>{h.value}</span>
+            ) : (
+              <span class="value">{h.value}</span>
+            )}
+            <span class="label">{h.label}</span>
+          </li>
+        );
+      })}
     </ul>
   </div>
 </section>
 
 <style>
   .hero {
+    --px: 0;
+    --py: 0;
     position: relative;
     overflow: hidden;
     padding-top: clamp(56px, 9vw, 112px);
@@ -49,18 +81,84 @@ import { highlights } from '../../data/services';
     gap: var(--space-5);
   }
 
+  .aparece {
+    animation: aparecer 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--d);
+  }
+
   h1 {
     font-size: var(--text-h1);
     line-height: 1;
     letter-spacing: -0.025em;
   }
 
-  h1 span {
+  .linea {
     display: block;
   }
 
+  /* Apellidos: una franja de luz barre el azul de la marca cada pocos segundos. */
   .accent {
+    position: relative;
     color: var(--color-blue);
+    overflow: hidden;
+    padding-bottom: 0.08em;
+  }
+
+  .accent::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%);
+    mix-blend-mode: overlay;
+    transform: translateX(-120%);
+    animation: barrido 5.5s ease-in-out 2.2s infinite;
+    pointer-events: none;
+  }
+
+  @keyframes barrido {
+    0% {
+      transform: translateX(-120%);
+    }
+    35%,
+    100% {
+      transform: translateX(120%);
+    }
+  }
+
+  /* Palabras que rotan. */
+  .rotador {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.35em;
+    font-size: clamp(1.05rem, 0.9rem + 0.8vw, 1.5rem);
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+
+  .ventana {
+    position: relative;
+    display: inline-grid;
+    overflow: hidden;
+    color: var(--color-blue);
+    font-weight: 650;
+  }
+
+  .rotativa {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1), opacity 400ms;
+    white-space: nowrap;
+  }
+
+  .rotativa.activa {
+    opacity: 1;
+    transform: none;
+  }
+
+  .rotativa:global(.saliendo) {
+    opacity: 0;
+    transform: translateY(-100%);
   }
 
   .intro {
@@ -74,6 +172,7 @@ import { highlights } from '../../data/services';
     margin-top: var(--space-2);
   }
 
+  /* Credenciales */
   .credentials {
     position: relative;
     display: grid;
@@ -88,6 +187,11 @@ import { highlights } from '../../data/services';
     display: grid;
     gap: var(--space-1);
     padding: var(--space-5) var(--space-5) var(--space-6) 0;
+    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .credentials li:hover {
+    transform: translateY(-4px);
   }
 
   .credentials li + li {
@@ -99,6 +203,7 @@ import { highlights } from '../../data/services';
     font-family: var(--font-display);
     font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
     color: var(--color-blue);
+    font-variant-numeric: tabular-nums;
   }
 
   .label {
@@ -106,6 +211,7 @@ import { highlights } from '../../data/services';
     color: var(--color-muted);
   }
 
+  /* Orbitas con parallax y satelites que giran. */
   .orbits {
     position: absolute;
     inset: 0;
@@ -116,6 +222,8 @@ import { highlights } from '../../data/services';
     position: absolute;
     border-radius: 50%;
     border: 1px solid rgba(215, 186, 252, 0.7);
+    transition: translate 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    animation: girar 60s linear infinite;
   }
 
   .ring-lg {
@@ -123,6 +231,7 @@ import { highlights } from '../../data/services';
     height: 720px;
     right: -220px;
     top: -80px;
+    translate: calc(var(--px) * -18px) calc(var(--py) * -18px);
   }
 
   .ring-md {
@@ -130,6 +239,29 @@ import { highlights } from '../../data/services';
     height: 460px;
     right: -90px;
     top: 50px;
+    translate: calc(var(--px) * 26px) calc(var(--py) * 26px);
+    animation-duration: 40s;
+    animation-direction: reverse;
+  }
+
+  .satelite {
+    position: absolute;
+    top: 50%;
+    left: -6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-blue);
+    box-shadow: 0 0 0 6px rgba(0, 60, 255, 0.12);
+  }
+
+  .satelite-2 {
+    top: 8%;
+    left: 30%;
+    width: 9px;
+    height: 9px;
+    background: var(--color-lavender);
+    box-shadow: 0 0 0 5px rgba(215, 186, 252, 0.25);
   }
 
   .dot {
@@ -141,12 +273,20 @@ import { highlights } from '../../data/services';
     border-radius: 50%;
     background: var(--color-lavender);
     opacity: 0.45;
+    translate: calc(var(--px) * 40px) calc(var(--py) * 40px);
+    transition: translate 800ms cubic-bezier(0.22, 1, 0.36, 1);
     animation: float 9s ease-in-out infinite;
   }
 
   @keyframes float {
     50% {
-      transform: translateY(-18px);
+      transform: translateY(-18px) scale(1.04);
+    }
+  }
+
+  @keyframes girar {
+    to {
+      rotate: 360deg;
     }
   }
 
@@ -167,5 +307,16 @@ import { highlights } from '../../data/services';
     .ring-lg { width: 420px; height: 420px; right: -220px; top: -40px; }
     .ring-md { width: 260px; height: 260px; right: -130px; top: 40px; }
     .dot { width: 120px; height: 120px; right: -30px; top: 110px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .accent::after {
+      animation: none;
+      display: none;
+    }
+    .ring,
+    .dot {
+      animation: none;
+    }
   }
 </style>

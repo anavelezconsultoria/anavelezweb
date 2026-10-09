@@ -43,15 +43,15 @@ const TONE_CLASS: Record<DiagramTone, string> = {
     </g>
   ))}
 
-  {layout.edges.map((e) => (
-    <g class="edge">
+  {layout.edges.map((e, i) => (
+    <g class="edge" style={`--i: ${i}`}>
       <path d={e.path} marker-end={`url(#${markerId})`}></path>
       {e.label && <text x={e.labelX} y={e.labelY} text-anchor="middle">{e.label}</text>}
     </g>
   ))}
 
-  {layout.nodes.map((n) => (
-    <g class:list={['node', TONE_CLASS[n.tone]]}>
+  {layout.nodes.map((n, i) => (
+    <g class:list={['node', TONE_CLASS[n.tone]]} style={`--i: ${i}`}>
       <rect x={n.x} y={n.y} width={n.width} height={n.height} rx="4"></rect>
       <text class="node-label" x={n.x + n.width / 2} y={n.y + (n.caption ? 26 : 35)} text-anchor="middle">{n.label}</text>
       {n.caption && (
@@ -99,6 +99,58 @@ const TONE_CLASS: Record<DiagramTone, string> = {
 
   .node rect {
     stroke-width: 1.4;
+  }
+
+  /* Dibujo al aparecer: los nodos entran y luego las flechas se trazan. */
+  :global(.js) .node,
+  :global(.js) .boundary {
+    opacity: 0;
+    transform: translateY(10px);
+    transform-box: fill-box;
+    transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(var(--i, 0) * 110ms);
+  }
+
+  :global(.js) .edge path {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    transition: stroke-dashoffset 1100ms ease-in-out;
+    transition-delay: calc(500ms + var(--i, 0) * 180ms);
+  }
+
+  :global(.js) .edge text {
+    opacity: 0;
+    transition: opacity 400ms;
+  }
+
+  :global(.visible) .node,
+  :global(.visible) .boundary {
+    opacity: 1;
+    transform: none;
+  }
+
+  :global(.visible) .edge path {
+    stroke-dashoffset: 0;
+  }
+
+  :global(.visible) .edge text {
+    opacity: 1;
+  }
+
+  .node:hover rect {
+    filter: brightness(1.08);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .node,
+    :global(.js) .boundary,
+    :global(.js) .edge text {
+      opacity: 1;
+      transform: none;
+    }
+    :global(.js) .edge path {
+      stroke-dashoffset: 0;
+    }
   }
 
   .node-label {

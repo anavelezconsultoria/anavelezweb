@@ -1,0 +1,88 @@
+---
+/**
+ * Texto que aparece letra por letra (o palabra por palabra). Los lectores de
+ * pantalla leen el texto completo (oculto visualmente); los fragmentos van con aria-hidden.
+ */
+interface Props {
+  readonly texto: string;
+  readonly modo?: 'letras' | 'palabras';
+  /** Retraso inicial en milisegundos, para encadenar varias lineas. */
+  readonly retraso?: number;
+  /** Si es true, espera a ser visible en pantalla (scroll) antes de animar. */
+  readonly alVer?: boolean;
+  readonly class?: string;
+}
+
+const { texto, modo = 'letras', retraso = 0, alVer = false, class: clase } = Astro.props;
+const palabras = texto.split(' ');
+let indice = 0;
+const fragmentos = palabras.map((palabra) =>
+  modo === 'letras' ? Array.from(palabra).map((letra) => ({ letra, i: indice++ })) : [{ letra: palabra, i: indice++ }],
+);
+---
+
+<span
+  class:list={['texto-animado', `modo-${modo}`, clase]}
+  style={`--retraso: ${retraso}ms`}
+  data-revelar={alVer ? '' : undefined}
+>
+  <span class="visually-hidden">{texto}</span>
+  {
+    fragmentos.map((palabra, p) => (
+      <>
+        <span class="palabra" aria-hidden="true">
+          {palabra.map(({ letra, i }) => (
+            <span class="pieza" style={`--i: ${i}`}>{letra}</span>
+          ))}
+        </span>
+        {p < fragmentos.length - 1 && ' '}
+      </>
+    ))
+  }
+</span>
+
+<style>
+  .texto-animado {
+    display: inline;
+  }
+
+  .palabra {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .pieza {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.45em) rotate(4deg);
+    filter: blur(6px);
+    animation: subir-letra 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--retraso) + var(--i) * 32ms);
+  }
+
+  .modo-palabras .pieza {
+    animation-delay: calc(var(--retraso) + var(--i) * 70ms);
+  }
+
+  /* Con alVer, la animacion espera la clase .visible que pone el observador (solo si hay JS). */
+  :global(.js) [data-revelar]:not(.visible) .pieza {
+    animation-play-state: paused;
+  }
+
+  @keyframes subir-letra {
+    to {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pieza {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      animation: none;
+    }
+  }
+</style>

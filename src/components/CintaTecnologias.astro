@@ -1,0 +1,79 @@
+---
+/** Cinta continua con las tecnologias del portafolio. Se pausa al pasar el mouse. */
+const TECNOLOGIAS = [
+  'AWS', 'Azure', 'Terraform', 'Angular', 'React', 'Node.js', 'TypeScript', 'Java',
+  'PHP', 'Python', 'PostgreSQL', 'MySQL', 'MongoDB', 'Scrum', 'Kanban', 'CI/CD',
+] as const;
+---
+
+<div class="cinta" aria-label="Tecnologías con las que trabajo" role="region">
+  <div class="pista">
+    {[0, 1].map((copia) => (
+      <ul aria-hidden={copia === 1 ? 'true' : undefined}>
+        {TECNOLOGIAS.map((t) => <li>{t}</li>)}
+      </ul>
+    ))}
+  </div>
+</div>
+
+<style>
+  .cinta {
+    overflow: hidden;
+    border-block: 1px solid var(--color-lavender);
+    background: var(--color-surface);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .pista {
+    display: flex;
+    width: max-content;
+    animation: desplazar 38s linear infinite;
+  }
+
+  .cinta:hover .pista {
+    animation-play-state: paused;
+  }
+
+  ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-5) 0 var(--space-5) var(--space-6);
+    font-family: var(--font-display);
+    font-size: clamp(0.95rem, 0.8rem + 0.6vw, 1.25rem);
+    color: var(--color-ink);
+    white-space: nowrap;
+    transition: color 0.2s;
+  }
+
+  li::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-lavender);
+  }
+
+  li:hover {
+    color: var(--color-blue);
+  }
+
+  @keyframes desplazar {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pista {
+      animation: none;
+    }
+  }
+</style>

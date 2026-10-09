@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/Hero.astro';
+import CintaTecnologias from '../components/CintaTecnologias.astro';
 import ContactSection from '../components/home/ContactSection.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import ServiceIcon from '../components/ServiceIcon.astro';
@@ -25,13 +26,14 @@ const skillGroups = [
 
 <BaseLayout>
   <Hero />
+  <CintaTecnologias />
 
   <section class="section" id="servicios">
     <div class="container">
       <SectionHeading eyebrow="Servicios" title="¿En qué te puedo ayudar?" />
-      <ul class="services">
-        {services.map((service) => (
-          <li class="service">
+      <ul class="services" data-revelar="grupo">
+        {services.map((service, i) => (
+          <li class="service" style={`--i: ${i}`} data-foco>
             <ServiceIcon name={service.icon} />
             <h3>{service.title}</h3>
             <p>{service.summary}</p>
@@ -53,11 +55,11 @@ const skillGroups = [
 
   <section class="section" id="sobre-mi">
     <div class="container about">
-      <div class="portrait">
+      <div class="portrait" data-revelar="cortina">
         <Image src={portrait} alt={`Retrato de ${profile.fullName}`} widths={[360, 560, 720]} sizes="(max-width: 860px) 100vw, 45vw" />
         <span class="accent-square" aria-hidden="true"></span>
       </div>
-      <div class="about-body">
+      <div class="about-body" data-revelar="subir">
         <p class="eyebrow">Sobre mí</p>
         <h2>{profile.fullName}</h2>
         <p class="credentials">{profile.credentials}</p>
@@ -95,11 +97,47 @@ const skillGroups = [
   }
 
   .service {
+    position: relative;
     display: grid;
     gap: 16px;
     align-content: start;
     padding: clamp(28px, 4vw, 48px);
     border-bottom: 1px solid var(--color-lavender);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Foco de luz que sigue el cursor (variables --fx/--fy desde animaciones.ts). */
+  .service::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(360px circle at var(--fx, 50%) var(--fy, 50%), rgba(0, 60, 255, 0.08), transparent 60%);
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+
+  .service:hover::before {
+    opacity: 1;
+  }
+
+  .service :global(.icon) {
+    transition: transform 500ms var(--ease-salida), background-color 300ms, color 300ms;
+  }
+
+  .service:hover :global(.icon) {
+    transform: rotate(-12deg) scale(1.12);
+    background: var(--color-blue);
+    color: #fff;
+  }
+
+  .service h3 {
+    transition: color 300ms;
+  }
+
+  .service:hover h3 {
+    color: var(--color-blue);
   }
 
   .service:nth-child(odd) {

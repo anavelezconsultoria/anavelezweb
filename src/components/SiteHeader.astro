@@ -7,7 +7,7 @@ import { navLinks, profile } from '../data/profile';
 const currentPath = Astro.url.pathname.replace(/(\.html)?\/?$/, '') || '/';
 ---
 
-<header class="header">
+<header class="header" data-header>
   <div class="container bar">
     <a href="/" class="brand" aria-label={`${profile.fullName}, inicio`}>
       <Image src={logo} alt="" width={52} height={52} loading="eager" />
@@ -59,6 +59,12 @@ const currentPath = Astro.url.pathname.replace(/(\.html)?\/?$/, '') || '/';
     background: rgba(255, 246, 241, 0.9);
     backdrop-filter: saturate(160%) blur(10px);
     border-bottom: 1px solid var(--color-lavender);
+    transition: box-shadow 300ms, background-color 300ms;
+  }
+
+  .header:global(.con-scroll) {
+    box-shadow: 0 8px 30px rgba(0, 31, 128, 0.08);
+    background: rgba(255, 255, 255, 0.92);
   }
 
   .bar {

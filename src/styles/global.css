@@ -149,9 +149,87 @@ a {
   white-space: nowrap;
 }
 
+/* ---------- Movimiento ----------
+ * Todo lo que se revela al hacer scroll solo se oculta si hay JavaScript
+ * (clase .js en <html>): sin JS el contenido se ve completo. */
+
+:root {
+  --ease-salida: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+.js [data-revelar='subir'] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 800ms var(--ease-salida), transform 800ms var(--ease-salida);
+}
+
+.js [data-revelar='subir'].visible {
+  opacity: 1;
+  transform: none;
+}
+
+.js [data-revelar='grupo'] > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms var(--ease-salida), transform 700ms var(--ease-salida);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+
+.js [data-revelar='grupo'].visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+.js [data-revelar='cortina'] {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1100ms var(--ease-salida);
+}
+
+.js [data-revelar='cortina'].visible {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Brillo que cruza un boton cada pocos segundos. */
+.brillo {
+  position: relative;
+  overflow: hidden;
+}
+
+.brillo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+  transform: translateX(-120%);
+  animation: cruzar 4s ease-in-out 2.5s infinite;
+}
+
+@keyframes cruzar {
+  0% {
+    transform: translateX(-120%);
+  }
+  30%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .js [data-revelar] ,
+  .js [data-revelar] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
   }
   *,
   *::before,

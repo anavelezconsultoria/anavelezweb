@@ -24,7 +24,7 @@ const presentTones = (Object.keys(LEGEND) as DiagramTone[]).filter((tone) =>
 );
 ---
 
-<figure class="diagram">
+<figure class="diagram" data-revelar="">
   <DiagramSvg class="wide" layout={wide} id={`${id}-h`} title={diagram.title} />
   <DiagramSvg class="narrow" layout={narrow} id={`${id}-v`} title={diagram.title} />
   <figcaption aria-label="Leyenda del diagrama">
